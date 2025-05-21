@@ -1,5 +1,5 @@
-# Enterprise-Challenge---Sprint-1
-Enterprise Challenge - Sprint 1 - Reply
+# Dashboard em Python para Visualização dos Dados
+Dashboard em Python para Visualização dos Dados
 # FIAP - Inteligência artificial e data science
 
 <p align="center">
@@ -9,10 +9,10 @@ Enterprise Challenge - Sprint 1 - Reply
 <br>
 
 # Nome do projeto
-Cap 3 - Colheita de Dados e Insights - Cap 1 - Construindo uma máquina agrícola - Enterprise Challenge - Sprint 1
+Cap 3 - Colheita de Dados e Insights - Cap 1 - Construindo uma máquina agrícola - Dashboard em Python para Visualização dos Dados
 
 ## Nome do grupo
-39
+25
 
 ## 👨‍🎓 Integrantes: 
 - <a href="https://www.linkedin.com/company/inova-fusca">Guilherme Campos Hermanowski </a>
