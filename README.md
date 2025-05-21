@@ -27,8 +27,7 @@ Cap 3 - Colheita de Dados e Insights - Cap 1 - Construindo uma máquina agrícol
 - <a href="https://www.linkedin.com/company/inova-fusca">ANDRÉ GODOI CHIOVATO</a>
 
 ###  *ANTES DE MAIS NADA* Como visualizar?
-- Abra o Powershell dentro da pasta o arquivo dashboard_irrigacao.py estiver e execute
-- py -m streamlit run dashboard_irrigacao.py
+- Abra o Powershell dentro da pasta o arquivo "dashboard_irrigacao.py" estiver e execute "py -m streamlit run dashboard_irrigacao.py"
   
 ## 📜 Justificativa do problema e descrição da solução proposta
 
