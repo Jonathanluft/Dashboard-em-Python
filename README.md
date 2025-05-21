@@ -9,7 +9,7 @@ Enterprise Challenge - Sprint 1 - Reply
 <br>
 
 # Nome do projeto
-Cap 3 - Colheita de Dados e Insights - dados valiosos e maduros - Enterprise Challenge - Sprint 1
+Cap 3 - Colheita de Dados e Insights - Cap 1 - Construindo uma máquina agrícola - Enterprise Challenge - Sprint 1
 
 ## Nome do grupo
 39
@@ -29,6 +29,21 @@ Cap 3 - Colheita de Dados e Insights - dados valiosos e maduros - Enterprise Cha
 
 ## 📜 Justificativa do problema e descrição da solução proposta
 
+Sistemas de irrigação inteligentes geram uma grande quantidade de dados por meio de sensores que monitoram variáveis como umidade do solo, pH, níveis de fósforo e potássio, além do estado da bomba de irrigação. No entanto, esses dados, quando apresentados apenas em formato bruto, são de difícil interpretação — especialmente para usuários sem conhecimento técnico ou experiência com análise de dados.
+
+Na prática, isso dificulta a resposta a perguntas fundamentais, como:
+
+O solo está suficientemente irrigado?
+
+A bomba está sendo acionada nos momentos corretos?
+
+Os níveis de nutrientes estão dentro da faixa ideal?
+
+Há padrões que indicam falhas ou oportunidades de melhoria no sistema?
+
+Sem uma visualização adequada, essas informações passam despercebidas, atrasando decisões importantes, reduzindo a eficiência do sistema e até colocando em risco a saúde das plantas.
+
+Este projeto busca resolver esse problema ao transformar dados técnicos em informações visuais simples e acessíveis, facilitando o monitoramento, a tomada de decisão e a antecipação de ações corretivas — mesmo para quem não é programador ou especialista em agricultura de precisão.
 <br>
 
 Em cenários de produção onde há um grande número de maquinário atuando, é rotineiro que diferentes tipos de erros e falhas que acabem por gerar prejuízos e atrapalhar no andamento da produção aconteçam.
@@ -36,91 +51,66 @@ Mas e se esses prejuízos e paradas na produção pudessem ser previstos, e assi
 </p>
 Com foco no monitoramento e previsão de falhas em equipamentos de produção, utilizamos de sensores de temperatura, vibração, umidade e volume de produção, somado a uma arquitetura baseada em serviços AWS, para detecção de falhas antes que elas ocorram, permitindo que alertas sejam gerados e o erro evitado antes de sua incidência.
 
-
-## 🔧 Componentes
-**Definição das tecnologias que serão utilizadas (linguagens de programação, bibliotecas de IA, serviços de nuvem, banco de dados etc.):**
-
-**AWS IoT Core:**
-
-  -	***Definição:*** Permite conectar dispositivos físicos (como ESP32) à nuvem de forma segura, confiável e escalável.<br>
-  -	***Linguagem:*** MQTT, HTTP, TLS (via certificados).<br>
-  -	***Propósito:*** Receber os dados dos sensores do ambiente físico (temperatura, vibração, entre outras coletas) e encaminhá-los para o RDS.<br>
-  -	***Funcionamento:*** O dispositivo publica mensagens para um tópico MQTT, o IoT Core aplica regras de roteamento para enviar esses dados diretamente para RDS.<br>
-
-**Amazon RDS:**
-
-  -	***Definição:*** Banco de dados relacional, sem a necessidade de um EC2 e diminuindo atribuições como manutenção, configuração e atualizações de sistema Operacional, Redes ou Backup por exemplo.<br>
-  -	***Linguagem:*** SQL<br>
-  -	***Proposito:*** Armazenar os dados bruto do sensor, para garantir dados originais e também quaisquer logs adicionais pela equipe de IA (resultados de treinamentos por exemplo) ou estrutura relacional nova para atender escalabilidade da arquitetura de banco.<br>
-
-**Armazenamento S3 + Lake:**
-
-  -	***Definição:*** Armazenamento (S3) em nuvem e governança e controle de acesso sobre o armazenament (Lake Formation).<br>
-  -	***Integração:*** Através de replicação de dados do RDS e Lambda.<br>
-  -	***Propósito:*** Ter um repositório sem impactar em ambiente produtivo (RDS) e também possibilitando uma futura fonte de dados para construção de Dashboards, além de servir de fonte de dados para a IA.<br>
-  -	***Funcionamento:*** Assim que realizado um UPLOAD mapeado no S3, é diparado um gatilho para o Lambda acessar e dar inicio as etapas referentes aos dados para a IA.<br>
-
-**Amazon Lambda:**
-
-  -	***Definição:*** Permitir executar código em resposta a eventos.<br>
-  -	***Linguagem:*** Python.<br>
-  -	***Propósito:*** Realizar o pré processamento deles disparados pelo S3 e realizar a carga para o Amazon SageMaker, além também de servir para possível carga de dados no banco produtivo, referente a algum log a ser registrado no RDS.<br>
-  -	***Funcionamento:*** Disparado pelo S3 ou para carga de dados no RDS.(Em resumo uma ferramenta da AWS para integração de fluxos).<br>
-
-**Amazon SageMaker:**
-
-  -	***Definição:***  Plataforma de machine learning gerenciada para criar, treinar, implantar e monitorar modelos de aprendizado de máquina.<br>
-  -	***Linguagem:*** TensorFlow, R, Pandas e Numpy.<br>
-  -	***Integração:*** É acionado após o Lambda receber e fazer o pré processamento desses dados do S3.<br>
-  -	***Propósito:*** Processar os dados recebidos e realizar inferência com base nos modelos treinados, como detectar os padrões dos logs recebidos do sensor ESP32 e poder gerar uma análise preditiva.<br>
-  -	***Funcionamento:*** Recebe os dados do Lambda, executa a inferência com o modelo implantado e retorna a resposta, podendo registrar algum resultado no RDS (através do Lambda), ou disparando notificações para os usuários responsáveis sobre o equipamento monitorado em especifico daquele sensor.<br>
-
-**AWS Step Functions:**
-
-  -	***Definição:*** Coordenar a execução sequencial e condicional de vários serviços, para fluxos mais longos ou lógica mais complexa.<br>
-  -	***Linguagem:*** Podemos criar o Fluxo visualmente pelo console da AWS ou por exemplo chamar uma função Lambda escrita em Python.<br>
-  -	***Propósito:*** Organizar fluxos complexos em etapas visuais com controle de erro, espera, decisão e paralelismo.<br>
-
-**Amazon CloudWatch:**
-
-  -	***Definição:*** Monitoramento e observação de métricas, logs e alarmes de recursos da AWS.<br>
-  -	***Integração:*** Coleta logs e métricas do Lambda, monitora uso do SageMaker, e pode disparar  SNS ou outra função Lambda com base em condições.<br>
-  -	***Propósito:*** Acompanhar o comportamento do sistema e criar automações baseadas em falhas ou condições predefinidas.<br>
-  -	***Funcionamento:*** Analisa as métricas ou logs, acompanha os processos e disparar alertas via SNS ou outras funções de recursos.<br>
-
-**Amazon SNS (Simple Notification Service):**
-
-  -	***Definição:*** Envio de alertas e notificações por e-mail, SMS ou outras aplicações.<br>
-  -	***Propósito :*** Integrado com o Lambda ou diretamente com CloudWatch. Pode ser acionado com base nos resultados da IA, pela observação do CloudWatch em resposta a um evento, no nosso caso o acionamento em decorrência da identificação de problemas pela análise preditiva da IA e notificar  o responsável técnico pelo tipo de equipamento coletado pelo sensor que acusou o possível problema antes de ocorrer a parada em produção.<br>
-  -	***Funcionamento:*** Se a inferência do SageMaker indicar uma condição anormal, o Lambda ou Step Function publica uma mensagem no SNS que é entregue ao responsável via email, sms ou por alguma aplicação.<br>
-
-
-## 📁 Arquitetura e Pipeline
-
-![Pipeline AWS](https://github.com/user-attachments/assets/5eab299f-b2ad-4ea4-81e9-da8b4054551b)
-
-
-
-
 ## 🔧 Funcionamento
+Este dashboard foi desenvolvido com **Streamlit** para simular e visualizar dados de um sistema de irrigação inteligente, incluindo umidade do solo, estado da bomba, pH e nutrientes (fósforo e potássio).
 
-O sistema utiliza uma arquitetura de monitoramento inteligente na AWS, integrando sensores físicos, banco de dados, machine learning e notificações automatizadas. O ESP32 envia dados de sensores (volume de produção, temperatura, umidade e vibração) via MQTT para o AWS IoT Core, com comunicação segura por TLS e autenticação por certificados. Esses dados são roteados para uma função AWS Lambda, que grava as informações no Amazon RDS, um banco relacional gerenciado e seguro.
+- **Configuração da página**:
+  - Título da aba: `"Monitoramento de Irrigação"`
+  - Layout em tela cheia (`layout="wide"`)
+  - Título principal da interface: `"Dashboard de Monitoramento do Sistema de Irrigação 🌱"`
 
-Para viabilizar análises futuras e separar a carga operacional da base produtiva, os dados do RDS são exportados para o Amazon S3. Esse armazenamento forma o Data Lake, com controle de acesso gerenciado pelo AWS Lake Formation. A chegada de novos dados no S3 aciona automaticamente uma função AWS Lambda (via gatilho), que faz o pré-processamento utilizando Python e bibliotecas como pandas e boto3, e em seguida envia os dados ao Amazon SageMaker.
+  - Este código gera dados simulados para facilitar visualização
+- **Geração de dados simulados** (`generate_data()`):
+  - Gera um histórico com intervalos de 10 minutos nas últimas 24 horas.
+  - Simula:
+    - Umidade do solo (20% a 80%)
+    - Estado do relé (ligado/desligado)
+    - Nível de pH (5 a 8)
+    - Fósforo e potássio (0 a 50 mg/kg)
+  - Os dados são armazenados em um DataFrame com o índice baseado no timestamp.
 
-O Amazon SageMaker realiza a inferência com modelos desenvolvidos em Python, utilizando bibliotecas como TensorFlow, scikit-learn, numpy e pandas, para detectar padrões e antecipar possíveis falhas operacionais. Os resultados podem ser armazenados no RDS ou encaminhados a outras funções Lambda para tomada de decisão.
+- **Uso de sessão Streamlit**:
+  - Verifica se o DataFrame já está salvo no `st.session_state` para persistência dos dados entre interações.
+  - Se não existir, inicializa com os dados gerados.
 
-Workflows mais complexos e decisões condicionais são coordenados por AWS Step Functions, que orquestram a sequência de chamadas e ações de forma estruturada.
+- **Painel lateral de filtros**:
+  - Permite ao usuário selecionar um intervalo de datas para análise dos dados.
 
-Para observabilidade, o Amazon CloudWatch coleta métricas e logs de todos os serviços envolvidos, como Lambda, SageMaker e Step Functions. Alarmes podem ser configurados para detectar falhas, tempos de resposta anormais ou comportamentos críticos, acionando o Amazon SNS para notificar os responsáveis via e-mail, SMS ou integração com sistemas externos.
+### 📊 Visualizações com Abas
 
-## 👨‍🎓 Divisão de responsabilidades:
-- Arquitetura (Pipeline e estrutura de features na AWS) : <a href="https://www.linkedin.com/company/inova-fusca">Gabriel Viel </a>
-- Coleta de dados: <a href="https://www.linkedin.com/company/inova-fusca">Jonathan Willian Luft </a> e <a href="https://www.linkedin.com/company/inova-fusca">Guilherme  Campos Hermanowski </a>
-- Banco de Dados: <a href="https://www.linkedin.com/company/inova-fusca">Gabriel Viel </a>
-- Treinamento de IA: <a href="https://www.linkedin.com/company/inova-fusca"> Matheus Alboredo Soares</a> 
-- Integração de Features: <a href="https://www.linkedin.com/company/inova-fusca">Gabriel Viel </a>, <a href="https://www.linkedin.com/company/inova-fusca"> Matheus Alboredo Soares</a>, <a href="https://www.linkedin.com/company/inova-fusca">Jonathan Willian Luft </a> e <a href="https://www.linkedin.com/company/inova-fusca">Guilherme  Campos Hermanowski </a>
+As informações são organizadas em três abas principais:
 
+#### 1. **Dashboard**
+- **Gráfico de Umidade do Solo**:
+  - Linha do tempo da umidade em porcentagem.
+- **Gráfico de Estado do Relé (Bomba de Irrigação)**:
+  - Gráfico de degraus mostrando se a bomba esteve ligada (1) ou desligada (0).
+- **Gráficos de Qualidade do Solo**:
+  - pH: gráfico de linha contínua.
+  - Nutrientes: fósforo e potássio plotados juntos.
+
+#### 2. **Tabela de Dados**
+- Exibe os dados brutos em formato de tabela interativa (`st.dataframe`).
+
+#### 3. **Simulação de Nova Leitura**
+- O usuário pode inserir manualmente novos valores:
+  - Umidade (%)
+  - pH
+  - Fósforo (mg/kg)
+  - Potássio (mg/kg)
+- A bomba é simulada como **ligada** se a umidade for **menor que 30%**.
+- Ao clicar em “Simular”:
+  - Um novo registro é adicionado ao DataFrame.
+  - Mensagem de sucesso é exibida.
+
+---
+
+### 🔍 Tecnologias Utilizadas
+
+- [Streamlit](https://streamlit.io/) — para construção do dashboard interativo
+- [Pandas](https://pandas.pydata.org/) — para manipulação de dados
+- [NumPy](https://numpy.org/) — para geração de dados simulados
+- [Matplotlib](https://matplotlib.org/) — para gráficos personalizados
 
 
 ## 📋 Licença
