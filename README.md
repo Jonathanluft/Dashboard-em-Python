@@ -26,7 +26,10 @@ Cap 3 - Colheita de Dados e Insights - Cap 1 - Construindo uma máquina agrícol
 ### Coordenador(a)
 - <a href="https://www.linkedin.com/company/inova-fusca">ANDRÉ GODOI CHIOVATO</a>
 
-
+###  *ANTES DE MAIS NADA* Como visualizar?
+- Abra o Powershell dentro da pasta o arquivo dashboard_irrigacao.py estiver e execute
+- py -m streamlit run dashboard_irrigacao.py
+  
 ## 📜 Justificativa do problema e descrição da solução proposta
 
 Sistemas de irrigação inteligentes geram uma grande quantidade de dados por meio de sensores que monitoram variáveis como umidade do solo, pH, níveis de fósforo e potássio, além do estado da bomba de irrigação. No entanto, esses dados, quando apresentados apenas em formato bruto, são de difícil interpretação — especialmente para usuários sem conhecimento técnico ou experiência com análise de dados.
@@ -76,7 +79,7 @@ Este dashboard foi desenvolvido com **Streamlit** para simular e visualizar dado
 - **Painel lateral de filtros**:
   - Permite ao usuário selecionar um intervalo de datas para análise dos dados.
 
-### 📊 Visualizações com Abas
+### Visualizações com Abas
 
 As informações são organizadas em três abas principais:
 
@@ -104,8 +107,7 @@ As informações são organizadas em três abas principais:
   - Mensagem de sucesso é exibida.
 
 ---
-
-### 🔍 Tecnologias Utilizadas
+###  Tecnologias Utilizadas
 
 - [Streamlit](https://streamlit.io/) — para construção do dashboard interativo
 - [Pandas](https://pandas.pydata.org/) — para manipulação de dados
