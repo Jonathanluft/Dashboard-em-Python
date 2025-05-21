@@ -28,7 +28,13 @@ Cap 3 - Colheita de Dados e Insights - Cap 1 - Construindo uma máquina agrícol
 
 ###  *ANTES DE MAIS NADA* Como visualizar?
 - Abra o Powershell dentro da pasta o arquivo "dashboard_irrigacao.py" estiver e execute "py -m streamlit run dashboard_irrigacao.py" no Powershell
-  
+
+## 📁 Conteúdo do Projeto
+
+- `dashboard_irrigacao.py`: Código fonte funcional em py.
+- `README.md`: Este documento explicativo.
+
+- 
 ## 📜 Justificativa do problema e descrição da solução proposta
 
 Sistemas de irrigação inteligentes geram uma grande quantidade de dados por meio de sensores que monitoram variáveis como umidade do solo, pH, níveis de fósforo e potássio, além do estado da bomba de irrigação. No entanto, esses dados, quando apresentados apenas em formato bruto, são de difícil interpretação — especialmente para usuários sem conhecimento técnico ou experiência com análise de dados.
